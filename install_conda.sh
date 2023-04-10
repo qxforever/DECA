@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-export CONDA_ENV_NAME=deca-env
+export CONDA_ENV_NAME=deca
 echo $CONDA_ENV_NAME
 
 conda create -n $CONDA_ENV_NAME python=3.7

@@ -246,6 +246,7 @@ class DECA(nn.Module):
                 uv_texture_gt = uv_gt[:,:3,:,:]*self.uv_face_eye_mask + (torch.ones_like(uv_gt[:,:3,:,:])*(1-self.uv_face_eye_mask)*0.7)
             
             opdict['uv_texture_gt'] = uv_texture_gt
+            ops_gt = self.render(verts, trans_verts, uv_texture_gt, codedict['light'])
             visdict = {
                 'inputs': images, 
                 'landmarks2d': util.tensor_vis_landmarks(images, landmarks2d),
@@ -255,7 +256,7 @@ class DECA(nn.Module):
             }
             if self.cfg.model.use_tex:
                 visdict['rendered_images'] = ops['images']
-
+                visdict['render_images_gt'] = ops_gt['images']
             return opdict, visdict
 
         else:
@@ -301,7 +302,7 @@ class DECA(nn.Module):
         # upsample mesh, save detailed mesh
         texture = texture[:,:,[2,1,0]]
         normals = opdict['normals'][i].cpu().numpy()
-        displacement_map = opdict['displacement_map'][i].cpu().numpy().squeeze()
+        displacement_map = opdict['displacement_map'][i].cpu().detach().numpy().squeeze()
         dense_vertices, dense_colors, dense_faces = util.upsample_mesh(vertices, normals, faces, displacement_map, texture, self.dense_template)
         util.write_obj(filename.replace('.obj', '_detail.obj'), 
                         dense_vertices, 

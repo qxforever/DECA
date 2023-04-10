@@ -20,6 +20,7 @@ from time import time
 import argparse
 import torch
 
+os.environ["CUDA_VISIBLE_DEVICES"] = "5"
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from decalib.deca import DECA
 from decalib.datasets import datasets 
@@ -38,6 +39,7 @@ def main(args):
     # run DECA
     deca_cfg.model.use_tex = args.useTex
     deca_cfg.rasterizer_type = args.rasterizer_type
+    deca_cfg.model.extract_tex = args.extractTex
     deca = DECA(config = deca_cfg, device=device)
     # identity reference
     i = 0
@@ -98,14 +100,14 @@ if __name__ == '__main__':
 
     parser.add_argument('-i', '--image_path', default='TestSamples/examples/IMG_0392_inputs.jpg', type=str,
                         help='path to input image')
-    parser.add_argument('-e', '--exp_path', default='TestSamples/exp/7.jpg', type=str, 
+    parser.add_argument('-e', '--exp_path', default='TestSamples/exp/0.jpg', type=str, 
                         help='path to expression')
     parser.add_argument('-s', '--savefolder', default='TestSamples/animation_results', type=str,
                         help='path to the output directory, where results(obj, txt files) will be stored.')
     parser.add_argument('--device', default='cuda', type=str,
                         help='set device, cpu for using cpu' )
     # rendering option
-    parser.add_argument('--rasterizer_type', default='standard', type=str,
+    parser.add_argument('--rasterizer_type', default='pytorch3d', type=str,
                         help='rasterizer type: pytorch3d or standard' )
     # process test images
     parser.add_argument('--iscrop', default=True, type=lambda x: x.lower() in ['true', '1'],
@@ -116,6 +118,8 @@ if __name__ == '__main__':
     parser.add_argument('--useTex', default=False, type=lambda x: x.lower() in ['true', '1'],
                         help='whether to use FLAME texture model to generate uv texture map, \
                             set it to True only if you downloaded texture model' )
+    parser.add_argument('--extractTex', default=True, type=lambda x: x.lower() in ['true', '1'],
+                        help='whether to extract texture from input image as the uv texture map, set false if you want albeo map from FLAME mode' )
     parser.add_argument('--saveVis', default=True, type=lambda x: x.lower() in ['true', '1'],
                         help='whether to save visualization of output' )
     parser.add_argument('--saveKpt', default=False, type=lambda x: x.lower() in ['true', '1'],
@@ -130,4 +134,3 @@ if __name__ == '__main__':
                         help='whether to save visualization output as seperate images' )
     main(parser.parse_args())
 
-    main(parser.parse_args())

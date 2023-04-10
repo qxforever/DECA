@@ -23,6 +23,7 @@ import imageio
 from skimage.transform import rescale
 import torch
 
+os.environ["CUDA_VISIBLE_DEVICES"] = "5"
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from decalib.deca import DECA
 from decalib.datasets import datasets 
@@ -40,6 +41,8 @@ def main(args):
     expdata = datasets.TestData(args.exp_path, iscrop=args.iscrop, face_detector=args.detector)
     # DECA
     deca_cfg.rasterizer_type = args.rasterizer_type
+    deca_cfg.model.extract_tex = args.extractTex
+
     deca = DECA(config=deca_cfg, device=device)
 
     visdict_list_list = []
@@ -121,8 +124,11 @@ if __name__ == '__main__':
     parser.add_argument('--device', default='cuda', type=str,
                         help='set device, cpu for using cpu' )
     # rendering option
-    parser.add_argument('--rasterizer_type', default='standard', type=str,
+    parser.add_argument('--rasterizer_type', default='pytorch3d', type=str,
                         help='rasterizer type: pytorch3d or standard' )
+    parser.add_argument('--extractTex', default=True, type=lambda x: x.lower() in ['true', '1'],
+                        help='whether to extract texture from input image as the uv texture map, set false if you want albeo map from FLAME mode' )
+    
     # process test images
     parser.add_argument('--iscrop', default=True, type=lambda x: x.lower() in ['true', '1'],
                         help='whether to crop input image, set false only when the test image are well cropped' )
