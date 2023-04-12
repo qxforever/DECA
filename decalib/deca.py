@@ -109,6 +109,7 @@ class DECA(nn.Module):
             end = start+int(num_dict[key])
             code_dict[key] = code[:, start:end]
             start = end
+            print(f'{key}: \n {code_dict[key]}')
             if key == 'light':
                 code_dict[key] = code_dict[key].reshape(code_dict[key].shape[0], 9, 3)
         return code_dict

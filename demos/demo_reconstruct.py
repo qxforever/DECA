@@ -15,7 +15,7 @@
 
 import os, sys
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "5"
+os.environ["CUDA_VISIBLE_DEVICES"] = "4"
 
 import cv2
 import numpy as np

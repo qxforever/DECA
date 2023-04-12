@@ -113,6 +113,12 @@ cfg.loss.reg_sym = 0.005
 cfg.loss.reg_z = 0.005
 cfg.loss.reg_diff = 0.005
 
+# ---------------------------------------------------------------------------- #
+# Options for Generate Flame Data
+cfg.gen = CN()
+cfg.gen.batch_size = 32
+cfg.gen.epoch = 50
+# ---------------------------------------------------------------------------- #
 
 def get_cfg_defaults():
     """Get a yacs CfgNode object with default values for my_project."""
